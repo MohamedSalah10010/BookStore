@@ -1,6 +1,7 @@
 
 using BookStore.Models;
 using BookStore.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore
@@ -16,9 +17,10 @@ namespace BookStore
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<BookShopDBContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("storeConnection")));
+            builder.Services.AddSwaggerGen(op=>op.EnableAnnotations());
+            builder.Services.AddDbContext<BookShopDBContext>(op => op.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("storeConnection")));
             builder.Services.AddScoped<UnitWork>();
+            builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<BookShopDBContext>();
 
             var app = builder.Build();
 

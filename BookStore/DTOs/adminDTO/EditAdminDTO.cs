@@ -5,8 +5,8 @@ namespace BookStore.DTOs.adminDTO
     public class EditAdminDTO
     {
 
-        [Required]
-        public string Id { get; set; }
+        //[Required]
+        //public string Id { get; set; } // casue i'm using Authorize
       
         [Required]
         public string UserName { get; set; }

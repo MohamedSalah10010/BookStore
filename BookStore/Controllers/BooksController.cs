@@ -4,11 +4,13 @@ using BookStore.Repos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BookStore.DTOs.bookDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         UnitWork _unit;
@@ -18,7 +20,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        public IActionResult getall() {
+        public IActionResult getAllBooks() {
             List<Book> books = _unit.Generic_BookRepo.selectAll();
             List<DisplayBookDTO> booksDTO = new List<DisplayBookDTO>();
             foreach (Book b in books)
@@ -40,7 +42,7 @@ namespace BookStore.Controllers
             return Ok(booksDTO);
         }
         [HttpGet("{id}")]
-        public IActionResult getbyid(int id)
+        public IActionResult getBookById(int id)
         {
             Book b = _unit.Generic_BookRepo.selectById(id);
             if (b != null)
@@ -65,11 +67,12 @@ namespace BookStore.Controllers
 
         
         [HttpPost]
-        public IActionResult add(AddBookDTO bookdto)
+        [Authorize(Roles ="admin")]
+        public IActionResult addBook(AddBookDTO bookdto)
         {
             if (ModelState.IsValid)
             {
-                Book b = new Book()
+                Book book = new Book()
                 {
                     Title=bookdto.BookTitle,
                     stock=bookdto.QuantityInStock,
@@ -81,16 +84,17 @@ namespace BookStore.Controllers
 
                 };
 
-                _unit.Generic_BookRepo.add(b);
+                _unit.Generic_BookRepo.add(book);
                 _unit.Save();
-                return CreatedAtAction("getbyid", new { id = b.Id }, null);
+                return CreatedAtAction("getBookById", new { id = book.Id }, null);
 
             }
             return BadRequest(ModelState);
 
         }
         [HttpPut("{id}")]
-        public IActionResult edit(int id, AddBookDTO bookdto)
+        [Authorize (Roles = "admin")]
+        public IActionResult editBook(int id, AddBookDTO bookdto)
         {
 
             if (ModelState.IsValid)
@@ -120,10 +124,9 @@ namespace BookStore.Controllers
 
         }
         [HttpDelete]
+        [Authorize (Roles = "admin")]
         public IActionResult delete(int id)
         {
-
-
             _unit.Generic_BookRepo.remove(id);
             _unit.Save();
             return Ok();

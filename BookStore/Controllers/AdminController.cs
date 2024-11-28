@@ -1,6 +1,7 @@
 ﻿using BookStore.DTOs.adminDTO;
 using BookStore.DTOs.customerDTO;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="admin")]
     public class AdminController : ControllerBase
     {
         UserManager<IdentityUser> userManager;
@@ -70,14 +72,13 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                var admin = (Admin)userManager.FindByIdAsync(adminDTO.Id).Result;
+                //var admin = (Admin)userManager.FindByIdAsync(adminDTO.Id).Result;
+                var admin = userManager.FindByNameAsync(User.Identity.Name).Result;
                 if (admin == null)
                 {
                     return NotFound();
                 }
 
-
-                
                 admin.Email = adminDTO.Email;
                 admin.PhoneNumber = adminDTO.PhoneNumber;
                 admin.UserName = adminDTO.UserName;
@@ -108,7 +109,7 @@ namespace BookStore.Controllers
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Id = user.Id,
+                ID = user.Id,
                 PhoneNumber = user.PhoneNumber
             };
             return Ok(adminDTO);
@@ -127,7 +128,7 @@ namespace BookStore.Controllers
                 {
 
                     Email = admin.Email,
-                    Id = admin.Id,
+                    ID = admin.Id,
                     PhoneNumber = admin.PhoneNumber,
                     UserName = admin.UserName
 

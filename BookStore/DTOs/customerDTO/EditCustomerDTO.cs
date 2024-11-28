@@ -4,8 +4,8 @@ namespace BookStore.DTOs.customerDTO
 {
     public class EditCustomerDTO
     {
-        [Required]
-        public string Id { get; set; }
+        //[Required]
+        //public string Id { get; set; } // cause i'm using authorize
         public string FullName { get; set; }
         [Required]
         public string UserName { get; set; }

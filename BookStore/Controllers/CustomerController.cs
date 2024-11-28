@@ -1,5 +1,6 @@
 ﻿using BookStore.DTOs.customerDTO;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         UserManager<IdentityUser> userManager;
@@ -21,6 +23,8 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
+
         public IActionResult getCustomers()
         {
             var customers = userManager.GetUsersInRoleAsync("customer").Result.OfType<Customer>().ToList();
@@ -34,7 +38,7 @@ namespace BookStore.Controllers
                     Address = customer.Address,
                     FullName = customer.FullName,
                     Email = customer.Email,
-                    Id = customer.Id,
+                    ID = customer.Id,
                     PhoneNumber = customer.PhoneNumber,
                     UserName = customer.UserName
 
@@ -48,6 +52,8 @@ namespace BookStore.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
+
         public IActionResult getCustomerById(string id) {
 
 
@@ -61,12 +67,14 @@ namespace BookStore.Controllers
                 FullName = user.FullName,
                 Address = user.Address,
                 Email = user.Email,
-                Id = user.Id,
+                ID = user.Id,
                 PhoneNumber = user.PhoneNumber
             };
             return Ok(customerDTO);
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
+
         public IActionResult createCustomer(AddCustomerDTO customerDTO) {
 
             Customer customer = new Customer()
@@ -106,7 +114,8 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var customer = (Customer) userManager.FindByIdAsync(customerDTO.Id).Result;
+                var user = User.Identity.Name;
+                var customer = (Customer) userManager.FindByNameAsync(user).Result;
                 if (customer == null)
                 {
                     return NotFound();

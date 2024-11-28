@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.DTOs.customerDTO
+namespace BookStore.DTOs.accountDTO
 {
     public class changePasswordDTO
     {
@@ -11,7 +11,7 @@ namespace BookStore.DTOs.customerDTO
         [Required]
         public string NewPassword { get; set; }
         [Required]
-        [Compare("NewPassword",ErrorMessage="password not match")]
+        [Compare("NewPassword", ErrorMessage = "password not match")]
         public string ConfirmPassword { get; set; }
 
     }

@@ -18,6 +18,8 @@ namespace BookStore.DTOs.customerDTO
         [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
         public string email { get; set; }
         [Required]
+        [RegularExpression("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")]
+
         public string phonenumber { get; set; }
 
 

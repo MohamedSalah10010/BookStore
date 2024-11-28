@@ -16,6 +16,7 @@ namespace BookStore.DTOs.adminDTO
 
         public string Email { get; set; }
         [Required]
+        [RegularExpression("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")]
 
         public string Phonenumber  { get; set; }
     }

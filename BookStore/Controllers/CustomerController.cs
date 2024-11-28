@@ -67,7 +67,7 @@ namespace BookStore.Controllers
             return Ok(customerDTO);
         }
         [HttpPost]
-        public IActionResult creatCustomer(AddCustomerDTO customerDTO) {
+        public IActionResult createCustomer(AddCustomerDTO customerDTO) {
 
             Customer customer = new Customer()
             {

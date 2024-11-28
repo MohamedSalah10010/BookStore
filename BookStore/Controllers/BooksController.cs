@@ -1,9 +1,9 @@
-﻿using BookStore.DTOs;
-using BookStore.Models;
+﻿using BookStore.Models;
 using BookStore.UnitOfWork;
-using BookStore.Repos; 
+using BookStore.Repos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BookStore.DTOs.bookDTO;
 
 namespace BookStore.Controllers
 {
@@ -20,10 +20,10 @@ namespace BookStore.Controllers
         [HttpGet]
         public IActionResult getall() {
             List<Book> books = _unit.Generic_BookRepo.selectAll();
-            List<BookDTO> booksDTO = new List<BookDTO>();
+            List<DisplayBookDTO> booksDTO = new List<DisplayBookDTO>();
             foreach (Book b in books)
             {
-                BookDTO bookDTO = new BookDTO()
+                DisplayBookDTO bookDTO = new DisplayBookDTO()
                 {
                     Book_Id = b.Id,
                     BookTitle = b.Title,
@@ -45,7 +45,7 @@ namespace BookStore.Controllers
             Book b = _unit.Generic_BookRepo.selectById(id);
             if (b != null)
             {
-                BookDTO bookDTO = new BookDTO()
+                DisplayBookDTO bookDTO = new DisplayBookDTO()
                 {
                     Book_Id = b.Id,
                     BookTitle = b.Title,

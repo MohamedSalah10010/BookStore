@@ -9,8 +9,7 @@ namespace BookStore.Models
         public int Id { get; set; }
         [StringLength(150)]
         public string Title { get; set; }
-        public string Description { get; set; }
-        public string Author { get; set; }
+        public string? Description { get; set; }
         public int stock { get; set; }
         [Column(TypeName = "money")]
         public decimal Price { get; set; }

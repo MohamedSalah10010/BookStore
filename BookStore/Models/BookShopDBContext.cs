@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Models
@@ -24,6 +25,12 @@ namespace BookStore.Models
 
             base.OnModelCreating(builder);
             builder.Entity<OrderDetails>().HasKey("book_id", "order_id");
+
+            builder.Entity<IdentityRole>().HasData(
+                new IdentityRole() { Name="admin", NormalizedName="ADMIN" }, 
+                new IdentityRole() { Name="customer", NormalizedName="CUSTOMER" }
+
+                );
         }
 
 

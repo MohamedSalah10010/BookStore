@@ -10,7 +10,7 @@ namespace BookStore.Models
 
         public int book_id { get; set; }
 
-        public int Quantity { get; set; }
+        public int quantity { get; set; }
 
         [Column(TypeName ="money")]
         public decimal unitPrice { get; set; }

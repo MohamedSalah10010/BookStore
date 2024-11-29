@@ -1,5 +1,6 @@
 ﻿using BookStore.DTOs.customerDTO;
 using BookStore.Models;
+using BookStore.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,12 +15,14 @@ namespace BookStore.Controllers
     {
         UserManager<IdentityUser> userManager;
         RoleManager<IdentityRole> roleManager;
+      
+
 
         public CustomerController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
-
+            
         }
 
         [HttpGet]
@@ -73,7 +76,6 @@ namespace BookStore.Controllers
             return Ok(customerDTO);
         }
         [HttpPost]
-        [Authorize(Roles = "admin")]
 
         public IActionResult createCustomer(AddCustomerDTO customerDTO) {
 
@@ -141,6 +143,20 @@ namespace BookStore.Controllers
             }
             else { return BadRequest(ModelState); }
             
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult deleteCustomer(string id)
+        {
+            var customer = userManager.FindByNameAsync(id).Result;
+            if(customer == null) { return NotFound(); }
+            else
+            {
+
+                userManager.DeleteAsync(customer);
+                return Ok();
+            }
+        
         }
     }
 }

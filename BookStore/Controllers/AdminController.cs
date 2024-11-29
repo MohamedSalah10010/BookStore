@@ -10,7 +10,7 @@ namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public class AdminController : ControllerBase
     {
         UserManager<IdentityUser> userManager;
@@ -82,7 +82,7 @@ namespace BookStore.Controllers
                 admin.Email = adminDTO.Email;
                 admin.PhoneNumber = adminDTO.PhoneNumber;
                 admin.UserName = adminDTO.UserName;
-               
+
 
                 var updateAdmin = userManager.UpdateAsync(admin).Result;
                 if (updateAdmin.Succeeded)
@@ -98,7 +98,7 @@ namespace BookStore.Controllers
             else { return BadRequest(ModelState); }
 
         }
-       
+
         [HttpGet("{id}")]
         public IActionResult getAdminById(string id)
         {
@@ -141,5 +141,16 @@ namespace BookStore.Controllers
 
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult deleteAdmin(string id)
+        { 
+        var admin = userManager.FindByIdAsync(id).Result;
+        if (admin == null) { return NotFound(); }
+        else 
+            {
+                userManager.DeleteAsync(admin);
+                return Ok(); 
+            }
+        }
     }
 }

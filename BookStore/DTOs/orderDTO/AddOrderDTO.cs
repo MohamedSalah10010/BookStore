@@ -7,6 +7,6 @@ namespace BookStore.DTOs.orderDTO
     public class AddOrderDTO
     {
         public string customer_id { get; set; }
-        public List<AddOrderDetailsDTO> orderDetails { get; set; } = new List<AddOrderDetailsDTO>();
+        public List<AddOrderDetailsDTO> books { get; set; } = new List<AddOrderDetailsDTO>();
     }
 }

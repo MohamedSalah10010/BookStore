@@ -8,6 +8,7 @@ namespace BookStore.UnitOfWork
         GenericRepo<Book> generic_BookRepo;
         GenericRepo<Author> generic_AuthorRepo;
         GenericRepo<Order> generic_OrderRepo;
+        GenericRepo<Catalog> generic_CatalogRepo;
         
 
         BookShopDBContext db;
@@ -52,6 +53,20 @@ namespace BookStore.UnitOfWork
                     generic_OrderRepo = new GenericRepo<Order>(db);
                 }
                 return generic_OrderRepo;
+            }
+        }
+
+
+        public GenericRepo<Catalog> Generic_CatalogRepo
+        {
+            get
+            {
+                if (generic_CatalogRepo == null)
+                {
+
+                    generic_CatalogRepo = new GenericRepo<Catalog>(db);
+                }
+                return generic_CatalogRepo;
             }
         }
         public void Save()

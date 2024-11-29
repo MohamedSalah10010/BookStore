@@ -19,7 +19,7 @@ namespace BookStore.Controllers
         RoleManager<IdentityRole> roleManager;
         UnitWork unit;
 
-        public AuthorController(UnitWork unit,UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthorController(UnitWork unit, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
@@ -33,18 +33,18 @@ namespace BookStore.Controllers
         public IActionResult getAuthors()
         {
             List<Author> Authors = unit.Generic_AuthorRepo.selectAll();
-                if (!Authors.Any()) { return NotFound(); }
+            if (!Authors.Any()) { return NotFound(); }
             List<SelectAuthorDTO> authorsDTO = new List<SelectAuthorDTO>();
             foreach (var author in Authors)
             {
 
                 SelectAuthorDTO authorDTO = new SelectAuthorDTO()
                 {
-                    AuthorFullName=author.FullName,
-                    Authors_NumberOfBooks=author.NumberOfBooks,
-                    AuthorBIO=author.Bio,
-                    Author_Age=author.age,
-                    Id=author.Id
+                    AuthorFullName = author.FullName,
+                    Authors_NumberOfBooks = author.NumberOfBooks,
+                    AuthorBIO = author.Bio,
+                    Author_Age = author.age,
+                    Id = author.Id
 
                 };
                 authorsDTO.Add(authorDTO);
@@ -90,7 +90,7 @@ namespace BookStore.Controllers
                 unit.Generic_AuthorRepo.save();
                 return Ok();
             }
-            else { return BadRequest(ModelState); }   
+            else { return BadRequest(ModelState); }
 
         }
 
@@ -101,21 +101,21 @@ namespace BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-                
+
+
                 var author = unit.Generic_AuthorRepo.selectById(authorDTO.Id);
-               
+
                 if (author == null)
                 {
                     return NotFound();
                 }
 
 
-               //author.FullName       = authorDTO.AuthorFullName;
-               //author.Bio          = authorDTO.AuthorBIO;
-               //author.NumberOfBooks    = authorDTO.Authors_NumberOfBooks;
-               //author.age       = authorDTO.Author_Age;
-             
+                //author.FullName       = authorDTO.AuthorFullName;
+                //author.Bio          = authorDTO.AuthorBIO;
+                //author.NumberOfBooks    = authorDTO.Authors_NumberOfBooks;
+                //author.age       = authorDTO.Author_Age;
+
                 unit.Generic_AuthorRepo.update(author);
                 unit.Generic_AuthorRepo.save();
 
@@ -127,10 +127,12 @@ namespace BookStore.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles ="admin")]
-        public IActionResult deleteAuthor(int id) { 
-        
+        public IActionResult deleteAuthor(int id) {
+
+            var author = unit.Generic_AuthorRepo.selectById(id);
+            if (author == null) { return NotFound(); }
             unit.Generic_AuthorRepo.remove(id);
             return Ok();
         

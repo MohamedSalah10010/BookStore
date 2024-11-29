@@ -15,7 +15,7 @@ namespace BookStore.Controllers
     {
         UnitWork _unit;
         public BooksController(UnitWork _unit)
-        { 
+        {
             this._unit = _unit;
         }
 
@@ -65,18 +65,18 @@ namespace BookStore.Controllers
             }
         }
 
-        
+
         [HttpPost]
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult addBook(AddBookDTO bookdto)
         {
             if (ModelState.IsValid)
             {
                 Book book = new Book()
                 {
-                    Title=bookdto.BookTitle,
-                    stock=bookdto.QuantityInStock,
-                    
+                    Title = bookdto.BookTitle,
+                    stock = bookdto.QuantityInStock,
+
                     publishDate = bookdto.PublishDate,
                     Price = bookdto.Price,
                     auth_id = bookdto.BookAuthorId,
@@ -93,7 +93,7 @@ namespace BookStore.Controllers
 
         }
         [HttpPut("{id}")]
-        [Authorize (Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult editBook(int id, AddBookDTO bookdto)
         {
 
@@ -123,7 +123,7 @@ namespace BookStore.Controllers
             return BadRequest(ModelState);
 
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize (Roles = "admin")]
         public IActionResult delete(int id)
         {

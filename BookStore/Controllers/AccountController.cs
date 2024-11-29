@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,6 +24,12 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Login user", Description = "Authenticates a user and generates a JWT token.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Login successful. Returns a JWT token.", typeof(string))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid login data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Invalid username or password.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult Login(loginDTO loginDTO) 
         {
             if (loginDTO == null) { return BadRequest(); }
@@ -75,8 +82,14 @@ namespace BookStore.Controllers
             }
             else return Unauthorized("Invalid username or password");
         }
-        [HttpPost("changepass")]
+        [HttpPost("changepassword")]
         [Authorize]
+        [SwaggerOperation(Summary = "Change user password", Description = "Allows a logged-in user to change their password.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Password changed successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid password data or password change failed.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User not authenticated.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult changePassword(changePasswordDTO changePasswordDTO) 
         {
             var userName = User.Identity.Name;
@@ -97,6 +110,10 @@ namespace BookStore.Controllers
 
         [HttpGet("logout")]
         [Authorize]
+        [SwaggerOperation(Summary = "Logout user", Description = "Logs out the currently authenticated user.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "User logged out successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "User not authenticated.")]
+        [Produces("application/json")]
         public IActionResult logout() 
         {
             

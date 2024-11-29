@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookStore.Controllers
 {
@@ -23,6 +24,13 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new admin", Description = "This endpoint allows an admin user to create a new admin. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Admin created successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid admin data or user creation failed.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult createAdmin(addAdminDTO adminDTO)
         {
 
@@ -68,6 +76,13 @@ namespace BookStore.Controllers
         //    }
         //}
         [HttpPut]
+        [SwaggerOperation(Summary = "Edit admin profile", Description = "This endpoint allows an admin to update their profile information (email, username, phone number). Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Admin profile updated successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid profile data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult editAdminProfile(EditAdminDTO adminDTO)
         {
             if (ModelState.IsValid)
@@ -100,6 +115,13 @@ namespace BookStore.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get admin by ID", Description = "This endpoint retrieves an admin's profile by their ID. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Admin data retrieved successfully.", typeof(SelectAdminDTO))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Admin not found.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        
         public IActionResult getAdminById(string id)
         {
             var user = (Admin)userManager.GetUsersInRoleAsync("admin").Result.Where(c => c.Id == id).FirstOrDefault();
@@ -116,6 +138,12 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all admins", Description = "This endpoint retrieves a list of all admins. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of admins retrieved successfully.", typeof(List<SelectAdminDTO>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No admins found.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
         public IActionResult getAdmins()
         {
             var admins = userManager.GetUsersInRoleAsync("admin").Result.OfType<Admin>().ToList();
@@ -142,6 +170,12 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete an admin by ID", Description = "This endpoint allows an admin user to delete another admin's account. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Admin deleted successfully.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Admin not found.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
         public IActionResult deleteAdmin(string id)
         { 
         var admin = userManager.FindByIdAsync(id).Result;

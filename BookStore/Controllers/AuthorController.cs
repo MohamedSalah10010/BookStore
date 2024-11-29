@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookStore.Controllers
 {
@@ -29,6 +30,13 @@ namespace BookStore.Controllers
 
 
         [HttpGet]
+     
+        [SwaggerOperation(Summary = "Get all authors", Description = "This endpoint retrieves a list of all authors. Requires authentication for access.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of authors retrieved successfully.", typeof(List<SelectAuthorDTO>))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No authors found.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
 
         public IActionResult getAuthors()
         {
@@ -54,9 +62,12 @@ namespace BookStore.Controllers
             return Ok(authorsDTO);
 
         }
-
         [HttpGet("{id}")]
-
+        [SwaggerOperation(Summary = "Get author by ID", Description = "This endpoint retrieves a specific author by their ID. Requires authentication for access.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Author data retrieved successfully.", typeof(SelectAuthorDTO))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Author not found.")]
+        [Produces("application/json")]
         public IActionResult getAuthorById(int id)
         {
             var author = unit.Generic_AuthorRepo.selectById(id);
@@ -73,6 +84,13 @@ namespace BookStore.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "admin")]
+        [SwaggerOperation(Summary = "Create a new author", Description = "This endpoint allows an admin to create a new author. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Author created successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid author data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
 
         public IActionResult createAuthor(AddAuthorDTO authorDTO)
         {
@@ -96,7 +114,13 @@ namespace BookStore.Controllers
 
         [HttpPut]
         [Authorize(Roles = "admin")]
-
+        [SwaggerOperation(Summary = "Edit author profile", Description = "This endpoint allows an admin to update an author's profile information (name, bio, age, number of books). Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Author profile updated successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid profile data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult editAuthorProfile(EditAuthorDTO authorDTO)
         {
             if (ModelState.IsValid)
@@ -128,7 +152,14 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
+        [SwaggerOperation(Summary = "Delete an author by ID", Description = "This endpoint allows an admin to delete an author's profile by their ID. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Author deleted successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Author not found.")]
+        [Produces("application/json")]
+     
         public IActionResult deleteAuthor(int id) {
 
             var author = unit.Generic_AuthorRepo.selectById(id);

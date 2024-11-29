@@ -99,7 +99,7 @@ namespace BookStore.Controllers
         [Authorize]
         public IActionResult logout() 
         {
-
+            
             signinManger.SignOutAsync();
             return Ok();
         

@@ -4,8 +4,8 @@ namespace BookStore.DTOs.accountDTO
 {
     public class changePasswordDTO
     {
-        [Required]
-        public string Id { get; set; }
+        //[Required]
+        //public string Id { get; set; } // becuse of auth
         [Required]
         public string OldPassword { get; set; }
         [Required]

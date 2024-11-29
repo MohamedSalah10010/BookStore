@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BookStore.DTOs.bookDTO;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookStore.Controllers
 {
@@ -20,6 +21,10 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all books", Description = "This endpoint retrieves a list of all books. Requires authentication for access.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of books retrieved successfully.", typeof(List<DisplayBookDTO>))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [Produces("application/json")]
         public IActionResult getAllBooks() {
             List<Book> books = _unit.Generic_BookRepo.selectAll();
             List<DisplayBookDTO> booksDTO = new List<DisplayBookDTO>();
@@ -42,6 +47,12 @@ namespace BookStore.Controllers
             return Ok(booksDTO);
         }
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get book by ID", Description = "This endpoint retrieves a specific book by its ID. Requires authentication for access.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Book data retrieved successfully.", typeof(DisplayBookDTO))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Book not found.")]
+        [Produces("application/json")]
+       
         public IActionResult getBookById(int id)
         {
             Book b = _unit.Generic_BookRepo.selectById(id);
@@ -68,6 +79,13 @@ namespace BookStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
+        [SwaggerOperation(Summary = "Add a new book", Description = "This endpoint allows an admin to add a new book to the store. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status201Created, "Book added successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid book data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult addBook(AddBookDTO bookdto)
         {
             if (ModelState.IsValid)
@@ -94,6 +112,13 @@ namespace BookStore.Controllers
         }
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
+        [SwaggerOperation(Summary = "Edit a book's details", Description = "This endpoint allows an admin to update a book's details. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Book updated successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid book data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         public IActionResult editBook(int id, AddBookDTO bookdto)
         {
 
@@ -124,7 +149,13 @@ namespace BookStore.Controllers
 
         }
         [HttpDelete("{id}")]
-        [Authorize (Roles = "admin")]
+        [Authorize(Roles = "admin")]
+        [SwaggerOperation(Summary = "Delete a book by ID", Description = "This endpoint allows an admin to delete a book from the store by its ID. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Book deleted successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Book not found.")]
+        [Produces("application/json")]
         public IActionResult delete(int id)
         {
             _unit.Generic_BookRepo.remove(id);

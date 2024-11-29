@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookStore.Controllers
 {
@@ -27,6 +28,12 @@ namespace BookStore.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Get all customers", Description = "This endpoint retrieves all customers from the system. Accessible only by users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of customers retrieved successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No customers found.")]
 
         public IActionResult getCustomers()
         {
@@ -56,7 +63,12 @@ namespace BookStore.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]
-
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Get customer by ID", Description = "This endpoint retrieves customer details by their ID. Accessible only by users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Customer details retrieved successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Customer not found.")]
         public IActionResult getCustomerById(string id) {
 
 
@@ -76,6 +88,12 @@ namespace BookStore.Controllers
             return Ok(customerDTO);
         }
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Create a new customer", Description = "This endpoint creates a new customer. Accessible to all authenticated users.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Customer created successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request - Invalid data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
 
         public IActionResult createCustomer(AddCustomerDTO customerDTO) {
 
@@ -112,6 +130,13 @@ namespace BookStore.Controllers
         }
 
         [HttpPut]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Edit a customer profile", Description = "This endpoint allows a customer to update their profile information.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Profile updated successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request - Invalid data.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Customer not found.")]
         public IActionResult editCutomerProfile(EditCustomerDTO customerDTO) 
         {
             if (ModelState.IsValid) 
@@ -146,6 +171,14 @@ namespace BookStore.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Delete a customer by ID", Description = "This endpoint allows an admin to delete a customer from the system by their ID. Only accessible by authenticated users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Customer deleted successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Customer not found.")]
+
         public IActionResult deleteCustomer(string id)
         {
             var customer = userManager.FindByNameAsync(id).Result;

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookStore.Controllers
 {
@@ -23,6 +24,13 @@ namespace BookStore.Controllers
 
 
         [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [SwaggerOperation(Summary = "Create a new order", Description = "This endpoint allows a authenticated user to create a new order. The order details must be provided, including the books and quantities. The order will be validated and processed.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Order created successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid quantity or other bad request.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+
         public IActionResult createOrder(AddOrderDTO orderDTO)
         {
             Order order = new Order()
@@ -68,6 +76,12 @@ namespace BookStore.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Get all orders", Description = "This endpoint retrieves a list of all orders in the system. Accessible only by users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "List of orders.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "No orders found.")]
 
         public IActionResult getAllOrders()
         {
@@ -109,6 +123,12 @@ namespace BookStore.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Get order by ID", Description = "This endpoint retrieves an order by its ID. Accessible only by users with the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Order found.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Order not found.")]
 
         public IActionResult getOrderById(int id)
         {
@@ -141,7 +161,13 @@ namespace BookStore.Controllers
 
 
         }
+       
         [HttpGet("user")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Get order by user", Description = "This endpoint retrieves the order for the current authenticated user.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Order found.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Order not found.")]
         public IActionResult getOrderByUser()
         {
             var user = User.Identity.Name;
@@ -238,6 +264,14 @@ namespace BookStore.Controllers
 
         [HttpPut]
         [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [SwaggerOperation(Summary = "Edit an order", Description = "This endpoint allows an admin to edit an existing order. The order's details can be updated, including adding or modifying books and quantities.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Order updated successfully.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid quantity or other bad request.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Order not found.")]
 
         public IActionResult editOrder(EditOrderDTO editOrderDTO)
         {
@@ -318,6 +352,12 @@ namespace BookStore.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "admin")]
+        [Produces("application/json")]
+        [SwaggerOperation(Summary = "Delete an order by ID", Description = "This endpoint allows an admin to delete an order by its ID.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Order deleted successfully.")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized - Requires authentication.")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Order not found.")]
 
         public IActionResult deleteOrder(int id) 
         { 

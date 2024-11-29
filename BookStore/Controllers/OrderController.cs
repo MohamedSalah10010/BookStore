@@ -141,7 +141,7 @@ namespace BookStore.Controllers
 
 
         }
-        [HttpGet]
+        [HttpGet("user")]
         public IActionResult getOrderByUser()
         {
             var user = User.Identity.Name;

@@ -177,13 +177,27 @@ namespace BookStore.Controllers
         [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden - User does not have the 'admin' role.")]
         [Produces("application/json")]
         public IActionResult deleteAdmin(string id)
-        { 
-        var admin = userManager.FindByIdAsync(id).Result;
-        if (admin == null) { return NotFound(); }
-        else 
+        {
+            var admin = userManager.FindByIdAsync(id).Result;
+            if (admin == null)
             {
-                userManager.DeleteAsync(admin);
-                return Ok(); 
+                return NotFound();
+            }
+            else
+            {
+                // Remove roles associated with the user
+                var roles = userManager.GetRolesAsync(admin).Result;
+                foreach (var role in roles)
+                {
+                    userManager.RemoveFromRoleAsync(admin, role).Wait();
+                }
+                var res = userManager.DeleteAsync(admin).Result;
+                if (res.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                { return BadRequest(res.Errors); }
             }
         }
     }

@@ -182,14 +182,27 @@ namespace BookStore.Controllers
         public IActionResult deleteCustomer(string id)
         {
             var customer = userManager.FindByIdAsync(id).Result;
-            if(customer == null) { return NotFound(); }
+            if (customer == null)
+            {
+                return NotFound();
+            }
             else
             {
+                // Remove roles associated with the user
+                var roles = userManager.GetRolesAsync(customer).Result;
+                foreach (var role in roles)
+                {
+                    userManager.RemoveFromRoleAsync(customer, role).Wait();
+                }
+                var res = userManager.DeleteAsync(customer).Result;
+                if (res.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                { return BadRequest(res.Errors); }
 
-                userManager.DeleteAsync(customer);
-                return Ok();
             }
-        
         }
     }
 }

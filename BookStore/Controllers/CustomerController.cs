@@ -181,7 +181,7 @@ namespace BookStore.Controllers
 
         public IActionResult deleteCustomer(string id)
         {
-            var customer = userManager.FindByNameAsync(id).Result;
+            var customer = userManager.FindByIdAsync(id).Result;
             if(customer == null) { return NotFound(); }
             else
             {
